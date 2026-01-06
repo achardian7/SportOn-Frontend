@@ -11,7 +11,7 @@ const HeroSection = () => {
 					src="/images/basketball.png"
 					alt="Basketball image"
 					width={432}
-					height={473}
+					height={423}
 					className="grayscale absolute left-0 -top-20"
 				/>
 				<div className="relative w-full ml-40">
