@@ -13,7 +13,7 @@ const Button = ({
 	...props
 }: IButtonProps) => {
 	const baseStyles =
-		"inline-flex gap-2 duration-300 justiify-center items-center cursor-pointer hover:scale-105";
+		"inline-flex gap-2 duration-300 justify-center items-center cursor-pointer hover:scale-105";
 
 	const variants = {
 		dark: "bg-dark text-white hover:bg-dark/85",
