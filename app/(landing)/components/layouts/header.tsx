@@ -1,17 +1,26 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { FiSearch, FiShoppingBag } from "react-icons/fi";
+import CartPopup from "../ui/cart-popup";
 
 const Header = () => {
+	const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
+
 	return (
 		<header>
 			<div className="flex justify-between items-center gap-10 container mx-auto py-7">
-				<Image
-					src="/images/logo.svg"
-					alt="SportOn Logo"
-					width={127}
-					height={30}
-				/>
+				<Link href="/">
+					<Image
+						src="/images/logo.svg"
+						alt="SportOn Logo"
+						width={127}
+						height={30}
+					/>
+				</Link>
 
 				<nav className="flex gap-44 font-medium">
 					<Link
@@ -24,14 +33,19 @@ const Header = () => {
 					<Link href="#">Explore Products</Link>
 				</nav>
 
-				<div className="flex gap-10">
+				<div className="relative flex gap-10">
 					<FiSearch size={24} />
-					<div className="relative">
+					<button
+						onClick={() => setIsCartPopupOpen((prevState) => !prevState)}
+						className="relative cursor-pointer"
+					>
 						<FiShoppingBag size={24} />
 						<div className="absolute bg-primary rounded-full w-3.5 h-3.5 text-white -top-1 -right-1 text-[10px] text-center">
 							3
 						</div>
-					</div>
+					</button>
+
+					{isCartPopupOpen && <CartPopup />}
 				</div>
 			</div>
 		</header>
