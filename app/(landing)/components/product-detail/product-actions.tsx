@@ -24,6 +24,7 @@ const ProductActions = ({ stock, product }: IProductActionsProps) => {
 	const { addItem } = useCartStore();
 
 	const checkout = () => {
+		addItem(product);
 		push("/checkout");
 	};
 
