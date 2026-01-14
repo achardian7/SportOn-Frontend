@@ -1,29 +1,14 @@
 import { FiCreditCard } from "react-icons/fi";
 
 import CardWithHeader from "../ui/card-with-header";
+import { getAllBanks } from "@/app/services/bank.service";
 
-const paymentOptions = [
-	{
-		bank_name: "BCA",
-		account_number: 1231231231231,
-		account_holder: "PT SportsOn Digital",
-	},
-	{
-		bank_name: "Mandiri",
-		account_number: 89458434,
-		account_holder: "PT SportsOn Digital",
-	},
-	{
-		bank_name: "BRI",
-		account_number: 123891283912,
-		account_holder: "PT SportsOn Digital",
-	},
-];
+const PaymentOptions = async () => {
+	const banks = await getAllBanks();
 
-const PaymentOptions = () => {
 	return (
 		<CardWithHeader title="Payment Options">
-			{paymentOptions.map((payment, i) => (
+			{banks.map((payment, i) => (
 				<div
 					key={i}
 					className="flex items-center gap-5 p-5 border-b border-gray-100"
@@ -33,9 +18,9 @@ const PaymentOptions = () => {
 					</div>
 
 					<div>
-						<div className="font-bold">{payment.bank_name}</div>
-						<div className="text-sm">{payment.account_number}</div>
-						<div className="text-sm opacity-70">{payment.account_holder}</div>
+						<div className="font-bold">{payment.bankName}</div>
+						<div className="text-sm">{payment.accountNumber}</div>
+						<div className="text-sm opacity-70">{payment.accountName}</div>
 					</div>
 
 					<div className="ml-auto bg-blue-50 text-gray-800 px-2 py-1 text-xs h-fit">

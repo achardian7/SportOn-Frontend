@@ -3,34 +3,14 @@ import { useRouter } from "next/navigation";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
 
 import priceFormatter from "@/app/utils/price-formatter";
+import { useCartStore } from "@/app/hooks/use-cart-store";
+import { getImageUrl } from "@/app/lib/api";
 import Button from "./button";
-
-export const cartItems = [
-	{
-		name: "SportsOn Product 1",
-		category: "Running",
-		price: 450000,
-		qty: 2,
-		imgUrl: "product-1.png",
-	},
-	{
-		name: "SportsOn Product 2",
-		category: "Tennis",
-		price: 250000,
-		qty: 2,
-		imgUrl: "product-2.png",
-	},
-	{
-		name: "SportsOn Product 3",
-		category: "Running",
-		price: 230000,
-		qty: 1,
-		imgUrl: "product-3.png",
-	},
-];
 
 const CartPopup = () => {
 	const { push } = useRouter();
+
+	const { items: cartItems, removeItem } = useCartStore();
 
 	const totalPrice = cartItems.reduce(
 		(total, item) => total + item.qty * item.price,
@@ -46,34 +26,41 @@ const CartPopup = () => {
 			<div className="p-4 border-b border-gray-200 font-bold text-center">
 				Shopping Cart
 			</div>
-			{cartItems.map((item, i) => (
-				<div key={i} className="p-4 border-b border-gray-200 flex gap-3">
-					<div className="bg-primary-light aspect-square w-16 flex justify-center items-center">
-						<Image
-							src={`/images/products/${item.imgUrl}`}
-							alt={item.name}
-							width={63}
-							height={63}
-							className="aspect-square object-contain"
-						/>
-					</div>
-					<div className="self-center">
-						<div className="text-sm font-medium">{item.name}</div>
-						<div className="flex gap-3 text-xs font-medium">
-							<div>{item.qty}x</div>
-							<div className="text-primary">{priceFormatter(item.price)}</div>
+			{cartItems.length > 0 ? (
+				cartItems.map((item, i) => (
+					<div key={i} className="p-4 border-b border-gray-200 flex gap-3">
+						<div className="bg-primary-light aspect-square w-16 flex justify-center items-center">
+							<Image
+								src={getImageUrl(item.imageUrl)}
+								alt={item.name}
+								width={63}
+								height={63}
+								className="aspect-square object-contain"
+							/>
 						</div>
-					</div>
+						<div className="self-center">
+							<div className="text-sm font-medium">{item.name}</div>
+							<div className="flex gap-3 text-xs font-medium">
+								<div>{item.qty}x</div>
+								<div className="text-primary">{priceFormatter(item.price)}</div>
+							</div>
+						</div>
 
-					<Button
-						size="small"
-						variant="ghost"
-						className="size-7 p-0! self-center ml-auto"
-					>
-						<FiTrash />
-					</Button>
+						<Button
+							size="small"
+							variant="ghost"
+							className="size-7 p-0! self-center ml-auto"
+							onClick={() => removeItem(item._id)}
+						>
+							<FiTrash />
+						</Button>
+					</div>
+				))
+			) : (
+				<div className="text-center opacity-50 py-5">
+					Your shopping cart is empty
 				</div>
-			))}
+			)}
 
 			<div className="border-t border-gray-200 p-4">
 				<div className="flex items-center justify-between font-semibold">
