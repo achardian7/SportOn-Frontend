@@ -36,3 +36,13 @@ html {
 .input-group textarea {
 	@apply px-4 py-2.5 bg-gray-100 w-full outline-none text-sm focus:border focus:border-gray-400;
 }
+
+.input-group-admin label {
+	@apply block text-xs mb-1 font-medium;
+}
+
+.input-group-admin input,
+.input-group-admin textarea,
+.input-group-admin select {
+	@apply px-4 py-3 w-full border border-[#dbdbdb] rounded-md focus:border-gray-500 outline-none text-sm;
+}
