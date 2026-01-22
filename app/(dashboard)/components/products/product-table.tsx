@@ -2,32 +2,16 @@ import Image from "next/image";
 import { FiEdit2, FiTrash } from "react-icons/fi";
 
 import priceFormatter from "@/app/utils/price-formatter";
+import { Product } from "@/app/types";
+import { getImageUrl } from "@/app/lib/api";
 
-const productData = [
-	{
-		name: "SportOn Product 1",
-		imageUrl: "/images/products/product-1.png",
-		category: "Basketball",
-		price: 200000,
-		stock: 24,
-	},
-	{
-		name: "SportOn Product 2",
-		imageUrl: "/images/products/product-2.png",
-		category: "Running",
-		price: 230000,
-		stock: 20,
-	},
-	{
-		name: "SportOn Product 3",
-		imageUrl: "/images/products/product-3.png",
-		category: "Basketball",
-		price: 500000,
-		stock: 6,
-	},
-];
+interface IProductTableProps {
+	products: Product[];
+	onDelete?: (id: string) => void;
+	onEdit?: (product: Product) => void;
+}
 
-const ProductTable = () => {
+const ProductTable = ({ products, onDelete, onEdit }: IProductTableProps) => {
 	return (
 		<div className="bg-white rounded-xl border border-gray-200">
 			<table className="w-full text-left border-collapse">
@@ -42,13 +26,13 @@ const ProductTable = () => {
 				</thead>
 
 				<tbody>
-					{productData.map((product, i) => (
-						<tr key={i} className="border-b border-gray-200">
+					{products.map((product) => (
+						<tr key={product._id} className="border-b border-gray-200">
 							<td className="px-6 py-4 font-medium">
 								<div className="flex gap-2 items-center">
 									<div className="aspect-square bg-gray-100 rounded-md">
 										<Image
-											src={product.imageUrl}
+											src={getImageUrl(product.imageUrl)}
 											alt={product.name}
 											width={52}
 											height={52}
@@ -60,7 +44,7 @@ const ProductTable = () => {
 							</td>
 							<td className="px-6 py-4 font-medium">
 								<div className="px-2 py-1 w-fit bg-gray-200 rounded-md">
-									{product.category}
+									{product.category.name}
 								</div>
 							</td>
 							<td className="px-6 py-4 font-medium">
@@ -68,10 +52,10 @@ const ProductTable = () => {
 							</td>
 							<td className="px-6 py-4 font-medium">{product.stock} units</td>
 							<td className="px-6 py-7.5 flex items-center gap-3 text-gray-600">
-								<button>
+								<button onClick={() => onEdit?.(product)}>
 									<FiEdit2 size={20} />
 								</button>
-								<button>
+								<button onClick={() => onDelete?.(product._id)}>
 									<FiTrash size={20} />
 								</button>
 							</td>

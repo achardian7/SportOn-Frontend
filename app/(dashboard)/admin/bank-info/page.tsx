@@ -1,18 +1,66 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "@/app/(landing)/components/ui/button";
-import BankInfoList from "../../components/bank-info/bank-info-list";
+import { Bank } from "@/app/types";
+import { deleteBank, getAllBanks } from "@/app/services/bank.service";
+import DeleteModal from "../../components/ui/delete-modal";
 import BankInfoModel from "../../components/bank-info/bank-info-modal";
+import BankInfoList from "../../components/bank-info/bank-info-list";
 
 const BankInfoManagement = () => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [banks, setBanks] = useState<Bank[]>([]);
+	const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [bankToDeleteId, setBankToDeleteId] = useState("");
+
+	const fetchBanks = async () => {
+		try {
+			const data = await getAllBanks();
+			setBanks(data);
+		} catch (error) {
+			console.error("Failed to fetch bank data", error);
+		}
+	};
 
 	const handleCloseModal = () => {
-		setIsOpen(false);
+		setIsModalOpen(false);
+		setSelectedBank(null);
 	};
+
+	const handleEdit = (bank: Bank) => {
+		setSelectedBank(bank);
+		setIsModalOpen(true);
+	};
+
+	const handleDelete = (id: string) => {
+		setBankToDeleteId(id);
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleDeleteConfirm = async () => {
+		if (!bankToDeleteId) return;
+
+		try {
+			await deleteBank(bankToDeleteId);
+			toast.success("Bank info deleted succesfully");
+			setBankToDeleteId("");
+			setIsDeleteModalOpen(false);
+			fetchBanks();
+		} catch (error) {
+			console.error("Failed to delete bank info");
+			toast.error("Failed to delete bank info ");
+		}
+	};
+
+	useEffect(() => {
+		fetchBanks();
+	}, []);
 
 	return (
 		<div>
@@ -24,14 +72,24 @@ const BankInfoManagement = () => {
 					</p>
 				</div>
 
-				<Button onClick={() => setIsOpen(true)} className="rounded-lg">
+				<Button onClick={() => setIsModalOpen(true)} className="rounded-lg">
 					<FiPlus size={24} />
 					Add Bank Account
 				</Button>
 			</div>
 
-			<BankInfoList />
-			<BankInfoModel isOpen={isOpen} onClose={handleCloseModal} />
+			<BankInfoList banks={banks} onEdit={handleEdit} onDelete={handleDelete} />
+			<BankInfoModel
+				bank={selectedBank}
+				onSuccess={fetchBanks}
+				isOpen={isModalOpen}
+				onClose={handleCloseModal}
+			/>
+			<DeleteModal
+				isOpen={isDeleteModalOpen}
+				onClose={() => setIsDeleteModalOpen(false)}
+				onConfirm={handleDeleteConfirm}
+			/>
 		</div>
 	);
 };

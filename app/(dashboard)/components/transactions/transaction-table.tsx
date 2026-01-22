@@ -1,36 +1,17 @@
 import { FiEye } from "react-icons/fi";
 
 import priceFormatter from "@/app/utils/price-formatter";
+import { Transaction } from "@/app/types";
 
 interface ITransactionTableProps {
-	onViewDetail: () => void;
+	onViewDetail: (transaction: Transaction) => void;
+	transactions: Transaction[];
 }
 
-const transactionData = [
-	{
-		date: "23/02/2026 19:32",
-		customer: "John Doe",
-		contact: "+123123123 ",
-		total: 1500000,
-		status: "pending",
-	},
-	{
-		date: "23/02/2026 19:32",
-		customer: "John Doe 2",
-		contact: "+123123123 ",
-		total: 2500000,
-		status: "rejected",
-	},
-	{
-		date: "23/02/2026 19:32",
-		customer: "John Doe 3",
-		contact: "+123123123 ",
-		total: 1000000,
-		status: "paid",
-	},
-];
-
-const TransactionTable = ({ onViewDetail }: ITransactionTableProps) => {
+const TransactionTable = ({
+	onViewDetail,
+	transactions,
+}: ITransactionTableProps) => {
 	const getStatusColor = (status: string) => {
 		switch (status.toLowerCase()) {
 			case "pending":
@@ -57,13 +38,21 @@ const TransactionTable = ({ onViewDetail }: ITransactionTableProps) => {
 				</thead>
 
 				<tbody>
-					{transactionData.map((data, i) => (
-						<tr key={i} className="border-b border-gray-200">
-							<td className="px-6 py-4 font-medium">{data.date}</td>
-							<td className="px-6 py-4 font-medium">{data.customer}</td>
-							<td className="px-6 py-4 font-medium">{data.contact}</td>
+					{transactions.map((data) => (
+						<tr key={data._id} className="border-b border-gray-200">
 							<td className="px-6 py-4 font-medium">
-								{priceFormatter(data.total)}
+								{new Date(data.createdAt).toLocaleDateString("id-ID", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
+									hour: "2-digit",
+									minute: "2-digit",
+								})}
+							</td>
+							<td className="px-6 py-4 font-medium">{data.customerName}</td>
+							<td className="px-6 py-4 font-medium">{data.customerContact}</td>
+							<td className="px-6 py-4 font-medium">
+								{priceFormatter(Number(data.totalPayment))}
 							</td>
 							<td className="px-6 py-4 font-medium">
 								<div
@@ -76,7 +65,7 @@ const TransactionTable = ({ onViewDetail }: ITransactionTableProps) => {
 							</td>
 							<td className="px-6 py-7.5 flex items-center gap-3 text-gray-600">
 								<button
-									onClick={onViewDetail}
+									onClick={() => onViewDetail(data)}
 									className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 w-fit py-1 px-2 rounded-md"
 								>
 									<FiEye size={18} />
