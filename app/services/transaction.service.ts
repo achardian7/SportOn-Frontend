@@ -4,7 +4,7 @@ import { Transaction } from "../types";
 export const transactionCheckout = async (
 	formData: FormData,
 ): Promise<Transaction> => {
-	const res = await fetchAPI<Transaction>("/transactions", {
+	const res = await fetchAPI<Transaction>("/transactions/checkout", {
 		method: "POST",
 		body: formData,
 	});

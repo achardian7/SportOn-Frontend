@@ -19,7 +19,7 @@ const PaymentSteps = () => {
 
 	const totalPrice = items.reduce(
 		(total, item) => total + item.price * item.qty,
-		0
+		0,
 	);
 
 	const handleConfirmPayment = async () => {
@@ -35,7 +35,7 @@ const PaymentSteps = () => {
 				"Customer information is missing, please return to checkout",
 				{
 					position: "top-center",
-				}
+				},
 			);
 			push("/checkout");
 			return;
@@ -46,15 +46,15 @@ const PaymentSteps = () => {
 			formData.append("customerName", customerInfo.customerName);
 			formData.append(
 				"customerContact",
-				customerInfo.customerContact!.toString()
+				customerInfo.customerContact!.toString(),
 			);
 			formData.append("customerAddress", customerInfo.customerAddress);
 			formData.append("image", file);
 			formData.append(
 				"purchasedItems",
 				JSON.stringify(
-					items.map((item) => ({ productId: item._id, qty: item.qty }))
-				)
+					items.map((item) => ({ productId: item._id, qty: item.qty })),
+				),
 			);
 			formData.append("totalPayment", totalPrice.toString());
 
